@@ -24,6 +24,7 @@ class Strivo extends StatelessWidget {
       return  MaterialApp.router( // use go_router package for Navigation
         routerConfig: AppRouter.router,
         debugShowCheckedModeBanner: false,
+        
         theme: ThemeData(
           fontFamily: 'Manrope',
         scaffoldBackgroundColor: AppColors.backgroundColor

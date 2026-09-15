@@ -11,4 +11,5 @@ abstract class AppRoutes {
   static const progress = '/progress';
   static const profile = '/profile';
   static const exerciseDetails = '/exercise-details';
+  static const testView = '/test-view';
 }

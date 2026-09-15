@@ -9,26 +9,18 @@ import 'package:strivo/features/auth/presentation/views/widgets/custom_auth_butt
 import 'package:strivo/features/auth/presentation/views/widgets/custom_signin_methods_button.dart';
 import 'package:strivo/features/auth/presentation/views/widgets/custom_textfield.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class SignupView extends StatefulWidget {
+  const SignupView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<SignupView> createState() => _SignupViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _SignupViewState extends State<SignupView> {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
- 
- 
-
-
-   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
+  final fullNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +39,7 @@ class _LoginViewState extends State<LoginView> {
                   height: 120.h,
                 ),
                 Text(
-                  'Welcome Back',
+                  'Create account',
                   style: TextStyle(
                     fontSize: 20.sp,
                     color: AppColors.primaryTextColor,
@@ -56,7 +48,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 Gap(12.h),
                 Text(
-                  'Sign in to continue your fitness journey',
+                  'Start your fitness transformation today',
                   style: TextStyle(
                     fontSize: 16.sp,
                     color: AppColors.secondaryTextColor,
@@ -68,11 +60,26 @@ class _LoginViewState extends State<LoginView> {
                   key: formKey,
                   child: Column(
                     children: [
+                       CustomTextField(
+                        prefixIcon: Icons.email_outlined,
+                        hintText: 'Enter Full Name',
+                        keyboardType: TextInputType.name,
+                        title: 'Full Name',
+                        controller: fullNameController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your full name';
+                          }
+                          return null;
+                        },
+                  
+                      ),
+                      Gap(16.h),
                       CustomTextField(
-                        controller: emailController,
                         prefixIcon: Icons.email_outlined,
                         hintText: 'Enter Your Email',
                         keyboardType: TextInputType.emailAddress,
+                        controller: emailController,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please enter your email';
@@ -82,12 +89,12 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       Gap(16.h),
                       CustomTextField(
-                        controller: passwordController,
                         prefixIcon: Icons.lock_outline,
                         hintText: 'Enter Your Password',
                         obscureText: true,
                         title: 'Password',
                         keyboardType: TextInputType.visiblePassword,
+                        controller: passwordController,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please enter your password';
@@ -99,30 +106,12 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),
                 Gap(20.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        context.push(AppRoutes.forgotPassword);
-                      },
-                      child: Text(
-                        "Forgot Password?",
-                        style: TextStyle(
-                          color: AppColors.primaryColor,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Gap(20.h),
+
                 Row(
                   children: [
                     Expanded(
                       child: CustomAuthButton(
-                        title: "Sign In",
+                        title: "Create Account",
                         onPressed: () {
                           if(formKey.currentState!.validate()){
                             context.push(AppRoutes.testView);
@@ -188,7 +177,7 @@ class _LoginViewState extends State<LoginView> {
           mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an account? ",
+                        "Already have an account? ",
                         style: TextStyle(
                           color: AppColors.secondaryTextColor,
                           fontSize: 14.sp,
@@ -197,9 +186,9 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       InkWell(
                         onTap: () {
-                          context.push(AppRoutes.signup);
+                          context.pop();
                         },
-                        child: Text(' Sign Up',
+                        child: Text(' Sign In',
                             style: TextStyle(
                               color: AppColors.primaryColor,
                               fontSize: 14.sp,
