@@ -12,7 +12,6 @@ class CustomTextField extends StatefulWidget {
     this.keyboardType = TextInputType.emailAddress,
     this.obscureText = false,
     this.validator,
-    this.onChanged,
     this.title = 'Email Address',
   });
 
@@ -22,7 +21,6 @@ class CustomTextField extends StatefulWidget {
   final TextInputType keyboardType;
   final bool obscureText;
   final String? Function(String?)? validator;
-  final void Function(String)? onChanged;
   final String title;
 
   @override
@@ -93,7 +91,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
               keyboardType: widget.keyboardType,
               obscureText: isObscure,
               validator: widget.validator,
-              onChanged: widget.onChanged,
               cursorColor: AppColors.primaryColor,
 
               style: TextStyle(

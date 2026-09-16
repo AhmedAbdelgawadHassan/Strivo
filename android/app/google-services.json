@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "644513652198",
+    "project_id": "strivo-9505e",
+    "storage_bucket": "strivo-9505e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644513652198:android:71575968dd8a55293eca27",
+        "android_client_info": {
+          "package_name": "com.example.strivo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDADr3Jxlhr58Bsbz-eiWymbXnzEHpXwMQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
