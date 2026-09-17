@@ -87,6 +87,42 @@ class AuthRepoImpl extends AuthRepo {
 
     
   }
-  
-  
+
+@override
+Future<Either<Failure, UserModel>> signInWithGoogle() async {
+  try {
+    final userCredential =
+        await firebaseAuthServices.signInWithGoogle();
+
+    final user = userCredential.user;
+
+    if (user == null) {
+      return left(
+        ServerFailure(
+          message: 'User data is not available.',
+        ),
+      );
+    }
+
+    return right(
+      UserModel(
+        email: user.email ?? '',
+        fullName: user.displayName ?? '',
+        userId: user.uid,
+      ),
+    );
+  } on CustomException catch (e) {
+    return left(
+      ServerFailure(
+        message: e.message,
+      ),
+    );
+  } catch (e) {
+    return left(
+      ServerFailure(
+        message: e.toString(),
+      ),
+    );
+  }
+}
 }

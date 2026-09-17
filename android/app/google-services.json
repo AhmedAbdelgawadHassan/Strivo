@@ -12,7 +12,20 @@
           "package_name": "com.example.strivo"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "644513652198-58bduutdsqjtm2sllgauede3t1ao42o5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.strivo",
+            "certificate_hash": "6e196f8818c8133157602662136c76632e5fb7f6"
+          }
+        },
+        {
+          "client_id": "644513652198-3qr8k1ooci66n81vjsj1o4379f8i2nv5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDADr3Jxlhr58Bsbz-eiWymbXnzEHpXwMQ"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "644513652198-3qr8k1ooci66n81vjsj1o4379f8i2nv5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "644513652198-l0fcu03e31m1fh0k3is09k81f5t7tcop.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.strivo"
+              }
+            }
+          ]
         }
       }
     }

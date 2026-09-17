@@ -189,7 +189,9 @@ class _LoginViewState extends State<LoginView> {
                           CustomSigninMethodsButton(
                             image: Assets.images.google,
                             title: 'Google',
-                            onPressed: () {},
+                            onPressed: () {
+                              context.read<LoginCubit>().SignInWithGoogle();
+                            },
                           ),
                           Gap(16.w),
                           CustomSigninMethodsButton(

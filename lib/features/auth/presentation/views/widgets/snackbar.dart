@@ -1,100 +1,118 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:strivo/core/utils/app_colors.dart';
 
+void showErrorSnackBar(
+  BuildContext context, {
+  required String message,
+}) {
+  final messenger = ScaffoldMessenger.of(context);
 
-void showErrorSnackBar(BuildContext context,{ required String message,}) {
-  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      behavior: SnackBarBehavior.floating,
-      margin: EdgeInsets.symmetric(
-        horizontal: 8.w,
-        vertical: 0.h,
-      ),
-      padding: EdgeInsets.zero,
-      elevation: 0,
-      duration: const Duration(seconds: 3),
-      backgroundColor: Colors.transparent,
-      content: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 16.w,
-          vertical: 14.h,
+  messenger
+    ..hideCurrentSnackBar()
+    ..showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        duration: const Duration(seconds: 3),
+        margin: EdgeInsets.only(
+          left: 16.w,
+          right: 16.w,
+          bottom: 20.h,
         ),
-        decoration: BoxDecoration(
-          color: AppColors.primaryTextColor,
-          borderRadius: BorderRadius.circular(16.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 15,
-              offset: const Offset(0, 6),
+        padding: EdgeInsets.zero,
+        content: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 14.w,
+            vertical: 12.h,
+          ),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1E1E1E),
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: const Color(0xFFFF5252).withValues(alpha: 0.25),
+              width: 1,
             ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 42.w,
-              height: 42.h,
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.15),
-                shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.25),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
               ),
-              child: Icon(
-                Icons.error_outline_rounded,
-                color: Colors.red,
-                size: 24.sp,
+            ],
+          ),
+          child: Row(
+            children: [
+              // Error Icon
+              Container(
+                width: 42.w,
+                height: 60.w,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF5252).withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.error_outline_rounded,
+                  color: const Color(0xFFFF5252),
+                  size: 23.sp,
+                ),
               ),
-            ),
 
-            Gap(12.w),
+              Gap(12.w),
 
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Something went wrong',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w700,
+              // Text
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Error',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  Gap(4.h),
-                  Text(
-                    message,
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
+                    Gap(3.h),
+                    Text(
+                      message,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.65),
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                        height: 1.35,
+                      ),
                     ),
+                  ],
+                ),
+              ),
+
+              Gap(8.w),
+
+              // Close Button
+              GestureDetector(
+                onTap: messenger.hideCurrentSnackBar,
+                child: Container(
+                  width: 30.w,
+                  height: 30.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.06),
+                    shape: BoxShape.circle,
                   ),
-                ],
+                  child: Icon(
+                    Icons.close_rounded,
+                    color: Colors.white.withValues(alpha: 0.55),
+                    size: 17.sp,
+                  ),
+                ),
               ),
-            ),
-
-            Gap(8.w),
-
-            GestureDetector(
-              onTap: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-              child: Icon(
-                Icons.close_rounded,
-                color: Colors.black54,
-                size: 20.sp,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
 }

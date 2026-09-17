@@ -193,7 +193,9 @@ class _SignupViewState extends State<SignupView> {
                             CustomSigninMethodsButton(
                               image: Assets.images.google,
                               title: 'Google',
-                              onPressed: () {},
+                              onPressed: () {
+                                context.read<SignupCubit>().signUpWithGoogle();
+                              },
                             ),
                             Gap(16.w),
                             CustomSigninMethodsButton(

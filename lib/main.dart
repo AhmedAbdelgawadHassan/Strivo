@@ -2,19 +2,22 @@ import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:strivo/core/routing/app_routers.dart';
 import 'package:strivo/core/services/get_it_services.dart';
 import 'package:strivo/core/services/shared_preferences_singleton.dart';
 import 'package:strivo/core/utils/app_colors.dart';
 import 'package:strivo/firebase_options.dart';
 
-void main() async{
+Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
    await Prefs.init();  // intailize sharedPreference
    WidgetsFlutterBinding.ensureInitialized();
 await Firebase.initializeApp(
   options: DefaultFirebaseOptions.currentPlatform,
 );
+  await GoogleSignIn.instance.initialize();
+
 setup();
   runApp(DevicePreview(enabled: false, builder: (context) => const Strivo()));
 }
