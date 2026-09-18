@@ -10,5 +10,12 @@ abstract class AuthRepo {
     Future<Either<Failure,UserModel>>signInUserWithEmailAndPassword(String email, String password);
    //// Sign In WIth Google
      Future<Either<Failure,UserModel>>signInWithGoogle();
+  /// Sign In With Facebook
+       Future<Either<Failure,UserModel>>signInWithFacebook();
+/// Reset Password Metod
+     Future<Either<Failure, void>> sendPasswordResetEmail({
+    required String email,
+  });
 
+   
 }

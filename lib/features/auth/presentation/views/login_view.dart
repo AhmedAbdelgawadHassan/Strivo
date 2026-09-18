@@ -197,7 +197,9 @@ class _LoginViewState extends State<LoginView> {
                           CustomSigninMethodsButton(
                             image: Assets.images.facebook,
                             title: 'Facebook',
-                            onPressed: () {},
+                            onPressed: () {
+                              context.read<LoginCubit>().SignInWithFacebook();
+                            },
                           ),
                         ],
                       ),

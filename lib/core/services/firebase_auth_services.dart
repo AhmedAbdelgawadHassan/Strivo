@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:strivo/core/errors/exceptions.dart';
 
 class FirebaseAuthServices {
-    final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+    final GoogleSignIn _googleSignIn = GoogleSignIn.instance; 
+     final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
   // =========================
   // Sign Up
@@ -115,6 +118,7 @@ class FirebaseAuthServices {
     );
   }
 
+  /// Sign In With Google
   Future<UserCredential> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser =
         await _googleSignIn.authenticate();
@@ -136,6 +140,49 @@ class FirebaseAuthServices {
       credential,
     );
     
+  }
+
+/// Sign In With Facebook
+Future<UserCredential> signInWithFacebook() async {
+  final LoginResult result = await FacebookAuth.instance.login();
+
+  if (result.status == LoginStatus.cancelled) {
+    throw CustomException(
+      message: 'Facebook sign in was cancelled.',
+    );
+  }
+
+  if (result.status != LoginStatus.success) {
+    throw CustomException(
+      message: result.message ?? 'Facebook sign in failed.',
+    );
+  }
+
+  final AccessToken? accessToken = result.accessToken;
+
+  if (accessToken == null) {
+    throw CustomException(
+      message: 'Facebook access token is null.',
+    );
+  }
+
+  final OAuthCredential credential =
+      FacebookAuthProvider.credential(
+    accessToken.tokenString,
+  );
+
+  return FirebaseAuth.instance.signInWithCredential(
+    credential,
+  );
+}
+
+   /// Reset Passw
+  Future<void> sendPasswordResetEmail({
+    required String email,
+  }) async {
+    await _auth.sendPasswordResetEmail(
+      email: email,
+    );
   }
 
 }

@@ -1,6 +1,7 @@
 
 
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:strivo/core/errors/exceptions.dart';
 import 'package:strivo/core/errors/failure.dart';
 import 'package:strivo/core/services/firebase_auth_services.dart';
@@ -125,4 +126,69 @@ Future<Either<Failure, UserModel>> signInWithGoogle() async {
     );
   }
 }
+
+  @override
+  Future<Either<Failure, UserModel>> signInWithFacebook() async{
+    try {
+      final userCredential =
+          await firebaseAuthServices.signInWithFacebook();
+
+      final user = userCredential.user;
+
+      if (user == null) {
+        return left(
+          ServerFailure(
+            message: 'User data is not available.',
+          ),
+        );
+      }
+
+      return right(
+        UserModel(
+          email: user.email ?? '',
+          fullName: user.displayName ?? '',
+          userId: user.uid,
+        ),
+        );
+    } on CustomException catch (e) {
+      return left(
+        ServerFailure(
+          message: e.message,
+        ),
+      );
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: e.toString(),
+        ),
+      );
+  
+
+    }
+    
+  }
+  @override
+Future<Either<Failure, void>> sendPasswordResetEmail({
+  required String email,
+}) async {
+  try {
+    await firebaseAuthServices.sendPasswordResetEmail(
+      email: email,
+    );
+
+    return const Right(null);
+  } on FirebaseAuthException catch (e) {
+    return Left(
+      ServerFailure(
+        message: e.message.toString(),
+      ),
+    );
+  } catch (e) {
+    return Left(
+      ServerFailure(message: e.toString()),
+    );
+  }
+}
+
+  
 }
