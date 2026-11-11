@@ -109,7 +109,8 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                               title: "Send Reset Link",
                               onPressed: () {
                                 if(formKey.currentState!.validate()){
-                                    context.read<ForgotPasswordCubit>().sendResetEmail(emailController.text.trim());
+                                    context.read<ForgotPasswordCubit>().sendResetEmail(
+                                      emailController.text.trim());  // Notice:  Email Message will sent to Gmail account (in Spam)
                                 }
                               },
                             ),
