@@ -1,9 +1,12 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:strivo/core/routing/app_routers.dart';
+import 'package:strivo/core/services/facebook_auth_config.dart';
 import 'package:strivo/core/services/get_it_services.dart';
 import 'package:strivo/core/services/shared_preferences_singleton.dart';
 import 'package:strivo/core/utils/app_colors.dart';
@@ -17,6 +20,7 @@ await Firebase.initializeApp(
   options: DefaultFirebaseOptions.currentPlatform,
 );
   await GoogleSignIn.instance.initialize();
+  await _initializeFacebookAuth();
 
 setup();
   runApp(DevicePreview(enabled: false, builder: (context) => const Strivo()));
@@ -44,5 +48,22 @@ class Strivo extends StatelessWidget {
       );
     },);
    
+  }
+}
+
+Future<void> _initializeFacebookAuth() async {
+  if (!FacebookAuthConfig.isConfigured) {
+    return;
+  }
+
+  if (kIsWeb ||
+      defaultTargetPlatform == TargetPlatform.macOS ||
+      defaultTargetPlatform == TargetPlatform.windows) {
+    await FacebookAuth.i.webAndDesktopInitialize(
+      appId: FacebookAuthConfig.appId,
+      cookie: true,
+      xfbml: true,
+      version: 'v21.0',
+    );
   }
 }

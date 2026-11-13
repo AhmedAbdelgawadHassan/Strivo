@@ -51,7 +51,7 @@ class _SignupViewState extends State<SignupView> {
               
               listener: (context, state) {
                  if(state is SignupSuccess){
-                   context.push(AppRoutes.testView);
+                   context.go(AppRoutes.testView);
                    
                    
                    }
@@ -201,7 +201,9 @@ class _SignupViewState extends State<SignupView> {
                             CustomSigninMethodsButton(
                               image: Assets.images.facebook,
                               title: 'Facebook',
-                              onPressed: () {},
+                              onPressed: () {
+                                context.read<SignupCubit>().signUpWithFacebook();
+                              },
                             ),
                           ],
                         ),

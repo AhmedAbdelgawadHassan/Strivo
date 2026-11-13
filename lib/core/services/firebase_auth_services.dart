@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:strivo/core/errors/exceptions.dart';
@@ -142,39 +145,112 @@ class FirebaseAuthServices {
     
   }
 
-/// Sign In With Facebook
-Future<UserCredential> signInWithFacebook() async {
-  final LoginResult result = await FacebookAuth.instance.login();
+  /// Sign In / Sign Up With Facebook
+  Future<UserCredential> signInWithFacebook() async {
+    try {
+      final rawNonce = _generateNonce();
+      final LoginResult result = await FacebookAuth.instance.login(
+        permissions: const ['email', 'public_profile'],
+        loginTracking: defaultTargetPlatform == TargetPlatform.iOS
+            ? LoginTracking.limited
+            : LoginTracking.enabled,
+        nonce: rawNonce,
+      );
 
-  if (result.status == LoginStatus.cancelled) {
-    throw CustomException(
-      message: 'Facebook sign in was cancelled.',
-    );
+      if (result.status == LoginStatus.cancelled) {
+        throw CustomException(
+          message: 'Facebook sign in was cancelled.',
+        );
+      }
+
+      if (result.status != LoginStatus.success) {
+        throw CustomException(
+          message: result.message ?? 'Facebook sign in failed.',
+        );
+      }
+
+      final AccessToken? accessToken = result.accessToken;
+
+      if (accessToken == null) {
+        throw CustomException(
+          message: 'Facebook access token is null.',
+        );
+      }
+
+      final OAuthCredential credential = _facebookCredential(
+        accessToken: accessToken,
+        rawNonce: rawNonce,
+      );
+
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
+
+      final user = userCredential.user;
+      if (user != null &&
+          (user.displayName == null || user.displayName!.isEmpty) &&
+          accessToken is LimitedToken &&
+          accessToken.userName.isNotEmpty) {
+        await user.updateDisplayName(accessToken.userName);
+      }
+
+      return userCredential;
+    } on CustomException {
+      rethrow;
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'account-exists-with-different-credential':
+          throw CustomException(
+            message:
+                'An account already exists with this email. Sign in with the original method first.',
+          );
+        case 'invalid-credential':
+          throw CustomException(
+            message: 'Facebook credential is invalid or expired.',
+          );
+        case 'operation-not-allowed':
+          throw CustomException(
+            message: 'Facebook authentication is not enabled.',
+          );
+        case 'user-disabled':
+          throw CustomException(
+            message: 'This user account has been disabled.',
+          );
+        default:
+          throw CustomException(
+            message: e.message ?? 'Facebook authentication failed.',
+          );
+      }
+    } catch (e) {
+      throw CustomException(
+        message: e.toString(),
+      );
+    }
   }
 
-  if (result.status != LoginStatus.success) {
-    throw CustomException(
-      message: result.message ?? 'Facebook sign in failed.',
-    );
+  OAuthCredential _facebookCredential({
+    required AccessToken accessToken,
+    required String rawNonce,
+  }) {
+    if (accessToken is LimitedToken) {
+      return OAuthProvider('facebook.com').credential(
+        idToken: accessToken.tokenString,
+        rawNonce: accessToken.nonce.isNotEmpty ? accessToken.nonce : rawNonce,
+      );
+    }
+
+    return FacebookAuthProvider.credential(accessToken.tokenString);
   }
 
-  final AccessToken? accessToken = result.accessToken;
-
-  if (accessToken == null) {
-    throw CustomException(
-      message: 'Facebook access token is null.',
-    );
+  String _generateNonce([int length = 32]) {
+    const charset =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = Random.secure();
+    return List.generate(
+      length,
+      (_) => charset[random.nextInt(charset.length)],
+    ).join();
   }
-
-  final OAuthCredential credential =
-      FacebookAuthProvider.credential(
-    accessToken.tokenString,
-  );
-
-  return FirebaseAuth.instance.signInWithCredential(
-    credential,
-  );
-}
 
    /// Reset Passw
   Future<void> sendPasswordResetEmail({

@@ -28,6 +28,7 @@ class _LoginViewState extends State<LoginView> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
@@ -44,7 +45,7 @@ class _LoginViewState extends State<LoginView> {
           child: BlocConsumer<LoginCubit, LoginStates>(
             listener: (context, state) {
               if (state is LoginSuccessState) {
-                context.push(AppRoutes.testView);
+                context.go(AppRoutes.testView);
               }
               if (state is LoginFailureState) {
                 showErrorSnackBar(context, message: state.message);
