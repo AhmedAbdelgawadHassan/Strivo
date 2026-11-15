@@ -1,3 +1,5 @@
+
+
 abstract class AppRoutes {
   static const splash = '/'; // Main route (initial route)
   static const onboarding = '/onboarding';
@@ -11,5 +13,9 @@ abstract class AppRoutes {
   static const progress = '/progress';
   static const profile = '/profile';
   static const exerciseDetails = '/exercise-details';
-  static const testView = '/test-view';
+  static const genderSelectionView = '/gender-selection-view';
+  static const activityLevelView ='/activityLevelView';
+  static const bodyMeasurements = '/bodyMeasurements';
+  static const reviewProfile='/reviewProfile';
+  static const fitnessGoal='/fitnessGoal';
 }

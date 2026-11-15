@@ -27,10 +27,10 @@ class _SplashViewState extends State<SplashView> {
 
     if (!mounted) return;
 
-    final isOnboardingSeen = Prefs.getBool(kIsOnboardingSeen) == true;
+    final isLoggedIn  = Prefs.getBool(kIsLoggedIn) == true;
 
-    if (isOnboardingSeen) {
-      context.go(AppRoutes.login);
+    if (isLoggedIn) {
+      context.go(AppRoutes.genderSelectionView);
     } else {
       context.go(AppRoutes.onboarding);
     }

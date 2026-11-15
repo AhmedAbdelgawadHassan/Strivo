@@ -51,7 +51,7 @@ class _SignupViewState extends State<SignupView> {
               
               listener: (context, state) {
                  if(state is SignupSuccess){
-                   context.go(AppRoutes.testView);
+                   context.go(AppRoutes.genderSelectionView);
                    
                    
                    }

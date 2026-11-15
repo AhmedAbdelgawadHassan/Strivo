@@ -58,7 +58,7 @@ class $AssetsImagesGen {
   String get facebook => 'assets/images/facebook.svg';
 
   /// File path: assets/images/female.svg
-  String get female => 'assets/images/female.svg';
+  String get female => 'assets/images/female.png';
 
   /// File path: assets/images/goal.svg
   String get goal => 'assets/images/goal.svg';
@@ -79,7 +79,7 @@ class $AssetsImagesGen {
   String get loseWeightLogo => 'assets/images/lose_weight_logo.svg';
 
   /// File path: assets/images/male.svg
-  String get male => 'assets/images/male.svg';
+  String get male => 'assets/images/male.png';
 
   /// File path: assets/images/notification-bell 1.svg
   String get notificationBell1 => 'assets/images/notification-bell 1.svg';
