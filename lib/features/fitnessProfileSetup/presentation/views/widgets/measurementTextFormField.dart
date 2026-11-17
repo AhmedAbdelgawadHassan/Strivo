@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +15,7 @@ class MeasurementTextFormField extends StatefulWidget {
   final String image;
   final TextEditingController controller;
   final String? Function(String?)? validator;
+  final ValueChanged<String>? onChanged;
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final String? helperText;
@@ -25,6 +28,7 @@ class MeasurementTextFormField extends StatefulWidget {
     required this.image,
     required this.controller,
     required this.validator,
+    this.onChanged,
     this.keyboardType = TextInputType.number,
     this.inputFormatters,
     this.helperText,
@@ -36,137 +40,193 @@ class MeasurementTextFormField extends StatefulWidget {
 }
 
 class _MeasurementTextFormFieldState extends State<MeasurementTextFormField> {
-  bool isFocused = false;
+  final FocusNode _focusNode = FocusNode();
+  bool _isFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      if (mounted) setState(() => _isFocused = _focusNode.hasFocus);
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  OutlineInputBorder _border(Color color, double width) => OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16.r),
+        borderSide: BorderSide(color: color, width: width),
+      );
 
   @override
   Widget build(BuildContext context) {
     const primaryColor = AppColors.primaryColor;
     const cardColor = AppColors.surfaceColor;
-    const borderColor = Color.fromARGB(255, 67, 67, 67);
+    const borderColor = Color(0xFF2E2E2E);
+    const errorColor = Color(0xFFFF5252);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Label
-        Text(
-          widget.label,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: AppSizes.font14,
-            fontWeight: FontWeight.w600,
+        // ===== Label =====
+        Padding(
+          padding: EdgeInsets.only(left: 4.w),
+          child: Text(
+            widget.label,
+            style: TextStyle(
+              color: _isFocused ? primaryColor : Colors.white,
+              fontSize: AppSizes.font14,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.3,
+            ),
           ),
         ),
         Gap(10.h),
 
-        // Input Field
-        Focus(
-          onFocusChange: (focused) {
-            setState(() {
-              isFocused = focused;
-            });
-          },
+        // ===== Field مع Glow عند الـ Focus =====
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: _isFocused
+                ? [
+                    BoxShadow(
+                      color: primaryColor.withOpacity(0.25),
+                      blurRadius: 16,
+                      spreadRadius: 0.5,
+                    ),
+                  ]
+                : [],
+          ),
           child: TextFormField(
+            focusNode: _focusNode,
             controller: widget.controller,
             keyboardType: widget.keyboardType,
             inputFormatters: widget.inputFormatters,
+            onChanged: widget.onChanged,
             validator: widget.validator,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             textDirection: TextDirection.ltr,
+            cursorColor: primaryColor,
+            cursorWidth: 2,
+            cursorRadius: const Radius.circular(2),
             style: TextStyle(
               color: Colors.white,
               fontSize: AppSizes.font16,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.5,
             ),
-            cursorColor: primaryColor,
             decoration: InputDecoration(
               hintText: widget.hint,
               hintStyle: TextStyle(
-                color: AppColors.secondaryTextColor,
+                color: Colors.white.withOpacity(0.3),
                 fontSize: AppSizes.font14,
                 fontWeight: FontWeight.w500,
               ),
-              // Leading Icon
+
+              // ===== الأيقونة داخل مربع صغير =====
               prefixIcon: Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 12.w),
-                child: SvgPicture.asset(widget.image),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  width: 38.w,
+                  decoration: BoxDecoration(
+                    color: _isFocused
+                        ? primaryColor.withOpacity(0.15)
+                        : const Color(0xFF252525),
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  padding: EdgeInsets.all(9.r),
+                  child: SvgPicture.asset(
+                    widget.image,
+                    colorFilter: _isFocused
+                        ? const ColorFilter.mode(
+                            primaryColor,
+                            BlendMode.srcIn,
+                          )
+                        : null,
+                  ),
+                ),
               ),
               prefixIconConstraints: BoxConstraints(
-                minWidth: 30.w,
-                minHeight: 30.h,
+                minWidth: 58.w,
+                minHeight: 58.h,
               ),
-              // Unit Container
+
+              // ===== وحدة القياس كـ Chip =====
               suffixIcon: Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  end: 12,
-                  top: 10,
-                  bottom: 10,
+                padding: EdgeInsetsDirectional.only(
+                  end: 12.w,
+                  top: 12.h,
+                  bottom: 12.h,
                 ),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  padding: EdgeInsets.symmetric(horizontal: 12.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF252525),
-                    borderRadius: BorderRadius.circular(8),
+                    color: _isFocused
+                        ? primaryColor.withOpacity(0.15)
+                        : const Color(0xFF252525),
+                    borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(
+                      color: _isFocused
+                          ? primaryColor.withOpacity(0.5)
+                          : Colors.transparent,
+                    ),
                   ),
                   child: Center(
-                    widthFactor: 1.5,
+                    widthFactor: 1,
                     child: Text(
                       widget.unit,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: _isFocused ? primaryColor : Colors.white70,
                         fontSize: AppSizes.font12,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
                 ),
               ),
+              suffixIconConstraints: const BoxConstraints(minWidth: 0),
 
               filled: true,
-              fillColor: cardColor,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 19,
-              ),
+              fillColor: _isFocused ? const Color(0xFF1E1E1E) : cardColor,
+              contentPadding: EdgeInsets.symmetric(vertical: 20.h),
 
-              // Default Border
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: const BorderSide(color: borderColor, width: 1),
-              ),
+              // ===== الحدود =====
+              enabledBorder: _border(borderColor, 1),
+              focusedBorder: _border(primaryColor, 1.5),
+              errorBorder: _border(errorColor, 1),
+              focusedErrorBorder: _border(errorColor, 1.5),
 
-              // Focus Border
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: const BorderSide(color: primaryColor, width: 1.5),
-              ),
-
-              // Error Border
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: const BorderSide(color: Colors.redAccent, width: 1),
-              ),
-
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: const BorderSide(
-                  color: Colors.redAccent,
-                  width: 1.5,
-                ),
-              ),
-
-              errorStyle: const TextStyle(
-                color: Colors.redAccent,
-                fontSize: 11,
+              // ===== رسالة الخطأ =====
+              errorStyle: TextStyle(
+                color: errorColor,
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w500,
+                height: 1.4,
               ),
             ),
           ),
         ),
 
+        // ===== Helper Text =====
         if (widget.helperText != null) ...[
-          const SizedBox(height: 7),
-          Text(
-            widget.helperText!,
-            style: const TextStyle(color: Color(0xFF777777), fontSize: 11),
+          Gap(7.h),
+          Padding(
+            padding: EdgeInsets.only(left: 4.w),
+            child: Text(
+              widget.helperText!,
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.4),
+                fontSize: 11.sp,
+              ),
+            ),
           ),
         ],
       ],

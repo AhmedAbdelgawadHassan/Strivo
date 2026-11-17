@@ -8,13 +8,14 @@ import 'package:strivo/core/utils/app_sizes.dart';
 
 class ContinueButton extends StatelessWidget {
   const ContinueButton({super.key, required this.onPressed});
-  final VoidCallback onPressed;
+  final  onPressed;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryColor,
+        disabledBackgroundColor: AppColors.primaryColor.withValues(alpha: 0.3),
         padding: EdgeInsets.symmetric(vertical: 8.h),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadiusGeometry.circular(8.r),

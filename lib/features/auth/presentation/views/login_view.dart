@@ -6,10 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:strivo/core/routing/app_routes.dart';
 import 'package:strivo/core/services/get_it_services.dart';
-import 'package:strivo/core/services/shared_preferences_singleton.dart';
 import 'package:strivo/core/utils/app_assets.dart';
 import 'package:strivo/core/utils/app_colors.dart';
-import 'package:strivo/core/utils/constants.dart';
 import 'package:strivo/features/auth/data/repos/auth_repo.dart';
 import 'package:strivo/features/auth/presentation/manager/cubits/login_cubit/login_cubit.dart';
 import 'package:strivo/features/auth/presentation/manager/cubits/login_cubit/login_states.dart';
@@ -152,7 +150,6 @@ class _LoginViewState extends State<LoginView> {
                                         emailController.text.trim(),
                                         passwordController.text.trim(),
                                       );
-                                      Prefs.setBool(kIsLoggedIn, true);
                                        
                                       
                                 }

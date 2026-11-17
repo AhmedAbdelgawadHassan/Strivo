@@ -53,11 +53,7 @@ class _OnboardingViewState extends State<OnboardingView> {
     pageController = PageController();
   }
 
-  @override
-  void dispose() {
-    pageController.dispose();
-    super.dispose();
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -150,5 +146,10 @@ class _OnboardingViewState extends State<OnboardingView> {
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
   }
 }

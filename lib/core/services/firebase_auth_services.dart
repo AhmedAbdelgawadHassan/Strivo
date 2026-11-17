@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:strivo/core/errors/exceptions.dart';
+import 'package:strivo/core/services/facebook_auth_config.dart';
 
 class FirebaseAuthServices {
     final GoogleSignIn _googleSignIn = GoogleSignIn.instance; 
@@ -261,4 +262,26 @@ class FirebaseAuthServices {
     );
   }
 
+}
+
+
+
+
+
+
+Future<void> initializeFacebookAuth() async {
+  if (!FacebookAuthConfig.isConfigured) {
+    return;
+  }
+
+  if (kIsWeb ||
+      defaultTargetPlatform == TargetPlatform.macOS ||
+      defaultTargetPlatform == TargetPlatform.windows) {
+    await FacebookAuth.i.webAndDesktopInitialize(
+      appId: FacebookAuthConfig.appId,
+      cookie: true,
+      xfbml: true,
+      version: 'v21.0',
+    );
+  }
 }

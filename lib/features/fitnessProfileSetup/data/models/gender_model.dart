@@ -1,6 +1,7 @@
 class GenderModel {
   final String title;
   final String image;
+  final String value;
 
-  GenderModel({required this.title, required this.image});
+  GenderModel({required this.title, required this.image,required this.value});
 }
